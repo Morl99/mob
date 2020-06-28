@@ -8,4 +8,6 @@ jobs:
     - uses: actions/setup-go@v2
       with:
         go-version: '^1.14.2'
+    - run: git config --global user.email "test@test.test"
+    - run: git config --global user.name "mob test git user"
     - run: go test
