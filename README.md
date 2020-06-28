@@ -2,6 +2,7 @@
 
 ![mob Logo](logo.svg)
 <p align="center">
+    ![Test](https://github.com/remotemobprogramming/mob/workflows/Test/badge.svg)
     <a href="https://github.com/remotemobprogramming/mob/graphs/contributors" alt="Contributors">
         <img src="https://img.shields.io/github/contributors/remotemobprogramming/mob" /></a>
      <a href="https://github.com/remotemobprogramming/mob/releases" alt="Downloads">
