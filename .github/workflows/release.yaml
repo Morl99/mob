@@ -1,11 +1,10 @@
 on: release
-name: release
+name: Release
 jobs:
   release:
     strategy:
       matrix:
         os: [ubuntu, darwin, windows]
-      runs-on: ${{ matrix.os }}
     name: release
     runs-on: ubuntu-latest
     steps:
