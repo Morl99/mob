@@ -22,7 +22,7 @@ jobs:
         if: matrix.os == 'darwin'
         id: shasum
         run: |
-          echo ::set-output name=sha::"$(shasum -a 256 ./release/gitui-mac.tar.gz | awk '{printf $1}')"
+          echo ::set-output name=sha::"$(shasum -a 256 ./tmp.tgz | awk '{printf $1}')"
       - name: Bump homebrew formula
         if: matrix.os == 'darwin'
         env:
