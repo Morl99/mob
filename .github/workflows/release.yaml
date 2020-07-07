@@ -4,7 +4,7 @@ jobs:
   release:
     strategy:
       matrix:
-        os: [ubuntu, darwin, windows]
+        os: [linux, darwin, windows]
     name: release
     runs-on: ubuntu-latest
     steps:
