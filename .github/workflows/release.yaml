@@ -12,6 +12,9 @@ jobs:
         id: get_version
         run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
       - uses: actions/checkout@master
+      - run: git config --global user.email "test@test.test"
+      - run: git config --global user.name "${{github.actor}}"
+      - run: go test
       - name: compile and release
         uses: remotemobprogramming/go-release.action@go1.14.1
         env:
