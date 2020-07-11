@@ -7,13 +7,27 @@ jobs:
     strategy:
       matrix:
         os: [linux, darwin, windows]
+    env:
+      GOPATH: ${{ github.workspace }}
+      GOARCH: amd64
+      GOOS: ${{ matrix.os }}
     name: release
     runs-on: ubuntu-latest
     steps:
+      - name: debug
+        run: |
+          go version
+          which go
+          env
       - uses: actions/checkout@master
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.14.4'
+      - name: debug2
+        run: |
+          go version
+          which go
+          env
       - run: git config --global user.email "test@test.test"
       - run: git config --global user.name "${{github.actor}}"
       - run: go test
@@ -21,8 +35,6 @@ jobs:
         uses: skx/github-action-build@master
         env:
           VERSION: ${{ github.event.release.tag_name }}
-          GOARCH: amd64
-          GOOS: ${{ matrix.os }}
       - name: Upload artifacts to release
         uses: svenstaro/upload-release-action@v2
         with:
