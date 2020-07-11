@@ -10,34 +10,25 @@ jobs:
     env:
       GOPATH: ${{ github.workspace }}
       GOARCH: amd64
+      GOOS: ${{ matrix.os }}
     name: release
     runs-on: ubuntu-latest
     steps:
-      - name: debug
-        run: |
-          go version
-          which go
-          env
       - uses: actions/checkout@master
-      - uses: actions/setup-go@v2
-        with:
-          go-version: '^1.14.4'
-      - name: debug2
-        run: |
-          go version
-          which go
-          env
-          ls -lart /opt/hostedtoolcache/go/
-          ls -lart /opt/hostedtoolcache/go/1.14.4/
-          ls -lart /opt/hostedtoolcache/go/1.14.4/x64
       - run: git config --global user.email "test@test.test"
       - run: git config --global user.name "${{github.actor}}"
       - run: go test
-      - name: Build and create release artifacts using .github/build
+        env:
+          GOOS: linux # the tests will only run if the os matches the os of the system of run-on
+      - name: Use Go 1.14 to build
+        uses: cedrickring/golang-action/go1.14@1.5.2
+        with:
+          args: go build
+        env:
+      - name: Create release artifacts using .github/build
         uses: skx/github-action-build@master
         env:
           VERSION: ${{ github.event.release.tag_name }}
-          GOOS: ${{ matrix.os }}
       - name: Upload artifacts to release
         uses: svenstaro/upload-release-action@v2
         with:
