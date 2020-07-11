@@ -13,21 +13,34 @@ jobs:
       - name: Get version
         id: get_version
         run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+      - name: Get Release
+        id: release
+        uses: bruceadams/get-release@v1
       - uses: actions/checkout@master
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.14.4'
       - run: git config --global user.email "test@test.test"
       - run: git config --global user.name "${{github.actor}}"
       - run: go test
-      - name: compile and release
-        uses: remotemobprogramming/go-release.action@go1.14.1
+      - name: Build and create release artifacts using .github/build
+        uses: skx/github-action-build@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.get_version.outputs.version }}
           GOARCH: amd64
           GOOS: ${{ matrix.os }}
+      - name: Upload artifacts to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: "*.tar.gz"
+          tag: ${{ steps.get_version.outputs.version }}
+          file_glob: true
       - name: Set SHA
         if: matrix.os == 'darwin'
         id: shasum
         run: |
-          echo ::set-output name=sha::"$(shasum -a 256 ./tmp.tgz | awk '{printf $1}')"
+          echo ::set-output name=sha::"$(shasum -a 256 *.tar.gz | awk '{printf $1}')"
       - name: Bump homebrew formula
         if: matrix.os == 'darwin'
         env:
